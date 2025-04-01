@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Maestros</title>
+    <link href="{% static 'maestros/style.css' %}" rel="stylesheet">
+    <a href="{% url 'maestros:index' %}" style="text-decoration: none;">
+        <button style="background: #2E8B57; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+            Volver al Inicio
+        </button>
+    </a>
+    
+</head>
+<body>
+    <h1>Registro de Maestros</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+    
+    <h2>Buscar Maestro</h2>
+    <form method="get">
+        <input type="text" name="q" placeholder="Buscar por nombre" value="{{ query }}">
+        <button type="submit">Buscar</button>
+    </form>
+    
+    <h2>Lista de Maestros</h2>
+    <ul>
+        {% for maestro in maestros %}
+            <li>
+                {{ maestro.nombre }} - {{ maestro.materia }} - {{ maestro.email }}
+                <div class="eliminar-container">
+                    <form method="post" action="{% url 'maestros:eliminar_maestro' maestro.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="eliminar" onclick="return confirm('¿Estás seguro de eliminar este maestro?');">
+                            <img src="{% static 'maestros/iconx.png' %}" alt="Eliminar" class="icono-eliminar">
+                        </button>
+                    </form>
+                </div>
+            </li>
+            
+        {% empty %}
+            <li>No se encontraron resultados</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
